@@ -1,11 +1,9 @@
-rTorrent Launcher
-=================
+# rTorrent Launcher
 
 A simple script to launch rTorrent.
 Tested on Debian and Ubuntu.
 
-Installation
-------------
+## Installation
 
 Before running the script, you must change some variables.
 
@@ -14,8 +12,7 @@ Before running the script, you must change some variables.
 * **CONFIG** - Path to rTorrent configuration file (.rtorrent.rc).
 * **LOG** - Path to rtorrent-launcher log file.
 
-Usage
------
+## Usage
 
 For the view mod, press CTRL+A then D to stop the screen without stopping rTorrent.
 
@@ -24,3 +21,7 @@ For the view mod, press CTRL+A then D to stop the screen without stopping rTorre
 * **status** - Display the status of rTorrent (screen down or up)
 * **restart** - Restart rTorrent (stop && start)
 * **view** - Open rTorrent.
+
+## License
+
+LGPL. See ``LICENSE`` for more details.
