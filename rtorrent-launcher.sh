@@ -1,12 +1,12 @@
-#! /bin/bash
+#!/bin/sh -e
 
 ##################################################################################
 #                                                                                #
-#  rTorrent Launcher 1.2                                                         #
+#  rTorrent Launcher 1.3                                                         #
 #                                                                                #
-#  A simple script to launch rTorrent.                                           #
+#  Init script to manage rtorrent daemon.                                        #
 #                                                                                #
-#  Copyright (C) 2013-2014 Cr@zy <webmaster@crazyws.fr>                          #
+#  Copyright (C) 2013-2015 Cr@zy <webmaster@crazyws.fr>                          #
 #                                                                                #
 #  rTorrent Launcher is free software; you can redistribute it and/or modify     #
 #  it under the terms of the GNU Lesser General Public License as published by   #
@@ -21,197 +21,241 @@
 #  You should have received a copy of the GNU Lesser General Public License      #
 #  along with this program. If not, see http://www.gnu.org/licenses/.            #
 #                                                                                #
-#  Usage: ./rtorrent-launcher.sh {start|stop|status|restart|view}                #
-#    - start: start rTorrent  in a screen.                                       #
-#    - stop: stop rTorrent and close the screen loaded.                          #
-#    - status: display the status of rTorrent (down or up).                      #
-#    - restart: restart rTorrent (stop && start).                                #
-#    - view: open rTorrent.                                                      #
-#     To exit the view mod without stopping the program, press CTRL + A then D.  #
+#  Usage: ./rtorrent.sh {start|stop|restart|status|info}                         #
+#    - start: start rtorrent in a screen.                                        #
+#    - stop: stop rtorrent and close the screen loaded.                          #
+#    - restart: restart rtorrent.                                                #
+#    - status: display the status of rtorrent.                                   #
+#    - info: display several infos about rtorrent.                               #
 #                                                                                #
 ##################################################################################
 
-SCREEN_NAME="rTorrent"
+### BEGIN INIT INFO
+# Provides:          rtorrent
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Init script to manage rtorrent daemon
+### END INIT INFO
+
+# System user to run as (can only use one)
 USER="rtorrent"
 
-CONFIG="/home/rtorrent/.rtorrent.rc"
-LOG="/var/log/rtorrent/rtorrent-launcher.log"
+# Name of screen session, no whitespace allowed
+SCRNAME="rtorrent"
 
-# Do not change this path
-PATH=/usr/bin:/usr/local/bin:/usr/local/sbin:/sbin:/bin:/usr/sbin
+# Log path
+LOGPATH="/var/log/rtorrent"
 
-# No edits necessary beyond this line
-DAEMON="rtorrent"
-EXEC_FOUND=0
+#### No edits necessary beyond this line
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+LOGFILE="$LOGPATH/rtorrent-launcher.log"
+NAME="rtorrent"
+DAEMON=""
+BASEPATH="/home/$USER"
+CONFIG="$BASEPATH/.rtorrent.rc"
 SESSION=""
 
-function dirsession {
-  SESSION=`cat "$1" | grep "^[[:space:]]*session[[:space:]]*=" | sed "s/^[[:space:]]*session[[:space:]]*=[[:space:]]*//" `
-  echo $SESSION
+log() {
+  if [ `whoami` = "root" ]; then
+    su - $USER -c "echo [`date +"%Y-%m-%d %H:%M:%S"`] $1 >> $LOGFILE 2>&1"
+  else
+    echo "[`date +"%Y-%m-%d %H:%M:%S"`] $1" >> $LOGFILE 2>&1
+  fi
 }
 
-function echolog {
-  echo "[`date +"%Y-%m-%d %H:%M:%S"`] $1" | tee -a "$LOG" >&2
+altecho() {
+  echo $1 && log $1
 }
 
-if [ ! -x `which awk` ]
-then
-  echolog "ERROR: You need awk for this script (try apt-get install awk)"
+get_pid() {
+  PID=`cat ${SESSION}/rtorrent.lock | awk -F: '{print($2)}' | sed "s/[^0-9]//g"`
+}
+
+get_session() {
+  SESSION=`cat "$CONFIG" | grep "^[[:space:]]*session[[:space:]]*=" | sed "s/^[[:space:]]*session[[:space:]]*=[[:space:]]*//"`
+}
+
+do_start() {
+  if do_status; then
+    altecho "$SCRNAME is already running"
+    RES=1
+    return
+  fi
+
+  altecho "Starting $SCRNAME..."
+  if [ `whoami` = "root" ]; then
+    su - $USER -c "screen -AmdS $SCRNAME $DAEMON"
+  else
+    screen -AmdS $SCRNAME $DAEMON
+  fi
+  sleep 2
+
+  if do_status; then
+    altecho "$SCRNAME started successfully"
+    RES=0
+    return
+  fi
+
+  altecho "ERROR: Cannot start $SCRNAME. Check your rtorrent logs."
+  RES=1
+}
+
+do_stop() {
+  if ! do_status; then
+    altecho "$SCRNAME could not be found. Probably not running."
+    RES=1
+    return
+  fi
+
+  altecho "Stopping $SCRNAME..."
+  if ! [ -s ${SESSION}/rtorrent.lock ]; then
+    altecho "ERROR: ${SESSION}/rtorrent.lock not found"
+    RES=1
+    return
+  fi
+
+  get_pid;
+  if [ `whoami` = "root" ]; then
+    if ps -A | grep -sq ${PID}.*rtorrent; then
+      su - $USER -c "kill -s INT ${PID}"
+    fi
+    tmp=$(su - $USER -c "screen -ls" | awk -F . "/\.$SCRNAME\t/ {print $1}" | awk '{print $1}')
+    su - $USER -c "screen -r $tmp -X quit"
+  else
+    if ps -A | grep -sq ${PID}.*rtorrent; then
+      kill -s INT ${PID}
+    fi
+    screen -r $(screen -ls | awk -F . "/\.$SCRNAME\t/ {print $1}" | awk '{print $1}') -X quit
+  fi
+  sleep 2
+
+  if ! do_status; then
+    altecho "$SCRNAME stopped successfully"
+    RES=0
+    return
+  fi
+
+  altecho "ERROR: Cannot stop $SCRNAME"
+  RES=1
+}
+
+do_status() {
+  res=""
+  if [ `whoami` = "root" ]; then
+    res=$(su - $USER -c "screen -ls" | grep [.]$SCRNAME[[:space:]])
+  else
+    res=$(screen -ls | grep [.]$SCRNAME[[:space:]])
+  fi
+  if [ -z "$res" -o ! -s "${SESSION}/rtorrent.lock" ]; then
+    return 1
+  fi
+  return 0
+}
+
+do_info() {
+  PID="N/A"
+  RSS_STR="N/A"
+  
+  if do_status; then
+    get_pid
+    RSS="`ps -p ${PID} --format rss | tail -n 1 | awk '{print $1}'`"
+    RSS_STR="`expr ${RSS} / 1024` Mb (${RSS} kb)"
+  fi
+  
+  echo "- Base Path             : ${BASEPATH}"
+  echo "- Config File           : ${CONFIG}"
+  echo "- Screen Session Name   : ${SCRNAME}"
+  echo "- Session Path          : ${SESSION}"
+  echo "- Process ID            : ${PID}"
+  echo "- Memory Usage          : ${RSS_STR}"
+  echo "- Active Connections    : "
+  netstat --ip -anp | grep -E "Proto|${NAME}"
+}
+
+if [ ! -d $LOGPATH ]; then
+  mkdir -p "$LOGPATH"
+fi
+
+if [ `whoami` != "root" -a `whoami` != "$USER" ]; then
+  altecho "ERROR: You need to be logged as root or $USER"
+  exit 3
+else
+  chown -R $USER. $LOGPATH
+fi
+
+if [ ! -x `which awk` ]; then
+  altecho "ERROR: You need awk for this script (try apt-get install awk)"
   exit 3
 fi
 
-if [ ! -x `which screen` ]
-then
-  echolog "ERROR: You need screen for this script (try apt-get install screen)"
+if [ ! -x `which screen` ]; then
+  altecho "ERROR: You need screen for this script (try apt-get install screen)"
   exit 3
 fi
 
 for i in `echo "$PATH" | tr ':' '\n'`
 do
-  if [ -f $i/$DAEMON ]
-  then
-    EXEC_FOUND=1
+  if [ -x "$i/$NAME" ]; then
+    DAEMON="$i/$NAME"
     break
   fi
 done
 
-if [ $EXEC_FOUND -eq 0 ]
-then
-  echolog "ERROR: rtorrent does not exist or is not executable in PATH $PATH"
+if [ -z $DAEMON ]; then
+  altecho "ERROR: Cannot find $NAME daemon or is not executable in PATH $PATH"
   exit 3
 fi
 
-if [ ! -r "${CONFIG}" ]
-then
-  echolog "ERROR: rtorrent config file does not exist or is not readable from ${CONFIG}."
+if [ ! -r "${CONFIG}" ]; then
+  altecho "ERROR: rtorrent config file does not exist or is not readable from ${CONFIG}."
   exit 3
 else
-  SESSION=`dirsession "$CONFIG"`
+  get_session
 fi
 
-if [ ! -d "${SESSION}" ]
-then
-  echolog "ERROR: session directory ${SESSION} does not exist or is not readable from ${CONFIG}."
+if [ ! -d "${SESSION}" ]; then
+  altecho "ERROR: Session directory ${SESSION} does not exist or is not readable from ${CONFIG}."
   exit 3
 fi
 
-function start {
-  if status
-  then
-    echolog "$SCREEN_NAME is already running"
-    exit 1
-  fi
-  
-  if [ `whoami` = root ]
-  then
-    su - $USER -c "screen -AmdS $SCREEN_NAME $DAEMON"
-  else
-    screen -AmdS $SCREEN_NAME $DAEMON
-  fi
-}
-
-function stop {
-  if ! status
-  then
-    echolog "$SCREEN_NAME could not be found. Probably not running."
-    exit 1
-  fi
-  
-  SESSION=`dirsession "$CONFIG"`
-  if ! [ -s ${SESSION}/rtorrent.lock ] ; then
-    return
-  fi
-
-  PID=`cat ${SESSION}/rtorrent.lock | awk -F: '{print($2)}' | sed "s/[^0-9]//g"`
-  if [ `whoami` = root ]
-  then
-    if ps -A | grep -sq ${PID}.*rtorrent
-    then
-      su - $USER -c "kill -s INT ${PID}"
-    fi
-    tmp=$(su - $USER -c "screen -ls" | awk -F . "/\.$SCREEN_NAME\t/ {print $1}" | awk '{print $1}')
-    su - $USER -c "screen -r $tmp -X quit"
-  else
-    if ps -A | grep -sq ${PID}.*rtorrent
-    then
-      kill -s INT ${PID}
-    fi
-    screen -r $(screen -ls | awk -F . "/\.$SCREEN_NAME\t/ {print $1}" | awk '{print $1}') -X quit
-  fi
-}
-
-function status {
-  if [ `whoami` = root ]
-  then
-    su - $USER -c "screen -ls" | grep [.]$SCREEN_NAME[[:space:]] > /dev/null
-  else
-    screen -ls | grep [.]$SCREEN_NAME[[:space:]] > /dev/null
-  fi
-}
-
-function view {
-  if ! status
-  then
-    echolog "$SCREEN_NAME could not be found. Probably not running."
-    exit 1
-  fi
-
-  if [ `whoami` = root ]
-  then
-    tmp=$(su - $USER -c "screen -ls" | awk -F . "/\.$SCREEN_NAME\t/ {print $1}" | awk '{print $1}')
-    su - $USER -c "screen -r $tmp"
-  else
-    screen -r $(screen -ls | awk -F . "/\.$SCREEN_NAME\t/ {print $1}" | awk '{print $1}')
-  fi
-}
-
-function usage {
-  echo "Usage: $0 {start|stop|status|restart|view}"
-  echo "On view mod, press CTRL+A then D to stop the screen without stopping the program."
-}
-
+RES=0
 case "$1" in
-
   start)
-    echolog "Starting $SCREEN_NAME..."
-    start
-    sleep 5
-    echolog "$SCREEN_NAME started successfully"
+    do_start
   ;;
 
   stop)
-    echolog "Stopping $SCREEN_NAME..."
-    stop
-    sleep 5
-    echolog "$SCREEN_NAME stopped successfully"
+    do_stop
   ;;
- 
-  restart)
-    echolog "Restarting $SCREEN_NAME..."
-    status && stop
-    sleep 5
-    start
-    sleep 5
-    echolog "$SCREEN_NAME restarted successfully"
+
+  restart|force-reload)
+    do_stop
+    do_start
   ;;
 
   status)
-    if status
-    then echolog "$SCREEN_NAME is UP"
-    else echolog "$SCREEN_NAME is DOWN"
+    if do_status; then
+      get_pid
+      altecho "$SCRNAME is running (PID ${PID})"
+      exit 0
+    else
+      altecho "$SCRNAME is not running"
+      exit 1
     fi
   ;;
- 
-  view)
-    echolog "Open $SCREEN_NAME screen..."
-    view
+  
+  info)
+    altecho "$SCRNAME infos :"
+    do_info
   ;;
 
   *)
-    usage
+    echo "Usage: $0 {start|stop|restart|status|info}"
     exit 1
   ;;
 
 esac
 
-exit 0
+exit $RES
