@@ -11,9 +11,9 @@ Tested on Debian and Ubuntu.
 ## Installation
 
 Execute the following commands to download and install the script :
-```console
+```
 $ cd /etc/init.d/
-$ wget https://raw.github.com/crazy-max/rtorrent-launcher/master/rtorrent -O rtorrent --no-check-certificate
+$ wget https://raw.github.com/crazy-max/rtorrent-launcher/master/rtorrent-launcher.sh -O rtorrent --no-check-certificate
 $ chmod +x rtorrent
 $ update-rc.d -f rtorrent remove
 $ update-rc.d rtorrent defaults
@@ -24,7 +24,7 @@ Before running the script, you must change some vars :
 
 * **USER** - Name of the user who starts rtorrent.
 * **SCRNAME** - The screen name, you can put what you want but it must be unique and must contain only alphanumeric character.
-* **LOG** - Path to rtorrent-launcher log file.
+* **LOG** - Log path.
 
 ## Usage
 
