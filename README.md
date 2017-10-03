@@ -1,5 +1,5 @@
 <a href="https://github.com/crazy-max/rtorrent-launcher/releases/latest"><img src="https://img.shields.io/github/release/crazy-max/rtorrent-launcher.svg?style=flat-square" alt="GitHub release"></a> 
-<a href="https://www.codacy.com/app/crazy-max/csgo-server-launcher"><img src="https://img.shields.io/codacy/grade/3bf2380df5a447da9a2c50b1008ffcfe.svg?style=flat-square" alt="Code Quality"></a> 
+<a href="https://www.codacy.com/app/crazy-max/rtorrent-launcher"><img src="https://img.shields.io/codacy/grade/3bf2380df5a447da9a2c50b1008ffcfe.svg?style=flat-square" alt="Code Quality"></a> 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=P7PRCWM6MRXD8"><img src="https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square" alt="Donate Paypal"></a> 
 <a href="https://flattr.com/submit/auto?user_id=crazymax&url=https://github.com/crazy-max/rtorrent-launcher"><img src="https://img.shields.io/badge/flattr-this-green.svg?style=flat-square" alt="Flattr this!"></a>
 
@@ -30,7 +30,7 @@ $ update-rc.d rtorrent enable
 ## Configuration
 
 Before running the script, you must change some vars in the config file `/etc/rtorrent-launcher.conf`.<br />
-If you change the location of the config file, do not forget to change the path in the csgo-server-launcher script file for the `CONFIG_FILE`.
+If you change the location of the config file, do not forget to change the path in the script file for the `CONFIG_FILE` var.
 
 #### USER
 
