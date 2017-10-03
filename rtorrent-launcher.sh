@@ -6,7 +6,7 @@
 #                                                                                #
 #  Init script to manage rtorrent daemon.                                        #
 #                                                                                #
-#  Copyright (C) 2013-2015 Cr@zy <webmaster@crazyws.fr>                          #
+#  Copyright (C) 2013-2017 Cr@zy <webmaster@crazyws.fr>                          #
 #                                                                                #
 #  rTorrent Launcher is free software; you can redistribute it and/or modify     #
 #  it under the terms of the GNU Lesser General Public License as published by   #
@@ -94,6 +94,12 @@ do_start() {
 
   if do_status; then
     altecho "$SCRNAME started successfully"
+    get_pid;
+    if [ `whoami` = "root" ]; then
+      su - $USER -c "echo $PID > ${SESSION}/rtorrent.pid"
+    else
+      echo $PID > ${SESSION}/rtorrent.pid
+    fi
     RES=0
     return
   fi
@@ -133,6 +139,7 @@ do_stop() {
 
   if ! do_status; then
     altecho "$SCRNAME stopped successfully"
+    rm -f "${SESSION}/rtorrent.pid"
     RES=0
     return
   fi
