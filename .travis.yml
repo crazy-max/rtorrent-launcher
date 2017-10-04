@@ -4,7 +4,7 @@ dist: trusty
 
 cache:
   directories:
-    - $HOME/libs
+    - $HOME/deps
 
 before_install:
   - sudo apt-get update
@@ -17,7 +17,7 @@ install:
   - sudo update-rc.d rtorrent enable
   - sudo cp rtorrent-launcher.conf /etc/
   - sudo cp .rtorrent.rc $HOME/
-  - sudo mkdir $HOME/libs
+  - sudo mkdir $HOME/deps
   - sudo chmod +x travis/*
   - sudo bash -e travis/install-xmlrpc.sh
   - sudo bash -e travis/install-libsigcpp.sh

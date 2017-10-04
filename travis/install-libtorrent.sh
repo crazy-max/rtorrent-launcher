@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/libs
+cd ~/deps
 git clone https://github.com/rakshasa/libtorrent
 cd libtorrent
 git checkout 0.13.6

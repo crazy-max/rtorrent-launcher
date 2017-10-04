@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/libs
+cd ~/deps
 git clone https://github.com/rakshasa/rtorrent
 cd rtorrent
 git checkout 0.9.6
