@@ -13,17 +13,22 @@ install:
   - sudo update-rc.d rtorrent enable
   - sudo cp rtorrent-launcher.conf /etc/
   - sudo cp .rtorrent.rc $HOME/
-  - sudo chmod +x ./travis-install.sh
-  - sudo bash -e travis-install.sh
+  - sudo chmod +x travis/install-*
+  - sudo bash -e travis/install-xmlrpc.sh
+  - sudo bash -e travis/install-libsigcpp.sh
+  - sudo bash -e travis/install-cares.sh
+  - sudo bash -e travis/install-curl.sh
+  - sudo bash -e travis/install-libtorrent.sh
+  - sudo bash -e travis/install-rtorrent.sh
 
 before_script:
   - sudo mkdir $HOME/.rtorrent.session /var/log/rtorrent
   - sudo chown -R $USER. $HOME /var/log/rtorrent/
   - sudo sed "s/USER=\"rotrrent\"/USER=\"$USER\"/" -i /etc/rtorrent-launcher.conf
   - sudo cat /etc/rtorrent-launcher.conf
-  - chmod +x ./travis-run.sh
+  - chmod +x travis/run.sh
 
-script: bash -e travis-run.sh
+script: bash -e travis/run.sh
 
 after_script:
   - cat /var/log/rtorrent/rtorrent-launcher.log
