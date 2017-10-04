@@ -31,6 +31,7 @@ before_script:
 script: bash -e travis/run.sh
 
 after_script:
+  - ls -al $HOME/.rtorrent.session/
   - cat /var/log/rtorrent/rtorrent-launcher.log
 
 notifications:
