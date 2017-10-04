@@ -15,7 +15,7 @@ install:
   - sudo chmod +x /etc/init.d/rtorrent
   - sudo update-rc.d rtorrent defaults
   - sudo cp rtorrent-launcher.conf /etc/
-  - sudo cp .rtorrent.rc $HOME/
+  - sudo cp travis/.rtorrent.rc /home/$USER/
   - sudo chmod +x travis/*
   - sudo bash -e travis/install-xmlrpc.sh
   - sudo bash -e travis/install-libsigcpp.sh
@@ -25,16 +25,17 @@ install:
   - sudo bash -e travis/install-rtorrent.sh
 
 before_script:
-  - sudo mkdir $HOME/.rtorrent.session /var/log/rtorrent
-  - sudo chown -R $USER. $HOME /var/log/rtorrent/
+  - sudo mkdir /home/$USER/.rtorrent.session /var/log/rtorrent
+  - sudo chown -R $USER. /home/$USER/ /var/log/rtorrent/
   - sudo sed "s/USER=\"rotrrent\"/USER=\"$USER\"/" -i /etc/rtorrent-launcher.conf
   - sudo sed "s/RTORRENT_CONFIG=\"\/home\/rtorrent\/.rtorrent.rc\"/RTORRENT_CONFIG=\"\/home\/$USER\/.rtorrent.rc\"/" -i /etc/rtorrent-launcher.conf
+  - sudo sed "s/session = ~\/.rtorrent.session/session = \/home\/$USER\/.rtorrent.session/" -i /home/$USER/.rtorrent.rc
   - sudo cat /etc/rtorrent-launcher.conf
 
 script: bash -e travis/run.sh
 
 after_script:
-  - ls -al $HOME/.rtorrent.session/
+  - ls -al /home/$USER/.rtorrent.session/
   - cat /var/log/rtorrent/rtorrent-launcher.log
 
 notifications:
