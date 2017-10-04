@@ -10,7 +10,7 @@
 
 ##################################################################################
 #                                                                                #
-#  Rtorrent Launcher 2.0                                                         #
+#  Rtorrent Launcher 2.1.0                                                       #
 #                                                                                #
 #  A simple bash script to launch the rTorrent daemon                            #
 #                                                                                #

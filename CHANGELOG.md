@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.0 (2017/10/04)
+
+* Fix error prone
+* Coding style
+
 ## 2.0 (2017/10/04)
 
 * Move config in a static file
