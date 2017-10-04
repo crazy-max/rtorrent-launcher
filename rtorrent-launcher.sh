@@ -190,9 +190,20 @@ DAEMON=""
 RTORRENT_SESSION_DIR=""
 WAN_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
-# Create log folder
+# Create the log directory
+if [ ! -d "$LOG_DIR" ];
+then
+  altecho "$LOG_DIR does not exist, creating..."
+  if [ $(whoami) = root ]
+  then
+    su - ${USER} -c "mkdir -p $LOG_DIR";
+  else
+    mkdir -p "$LOG_DIR"
+  fi
+fi
 if [ ! -d "$LOG_DIR" ]; then
-  mkdir -p "$LOG_DIR"
+  altecho "ERROR: Could not create $LOG_DIR"
+  exit 1
 fi
 chown -R ${USER}. "$LOG_DIR"
 
