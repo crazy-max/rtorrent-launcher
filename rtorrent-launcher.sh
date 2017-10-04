@@ -51,7 +51,7 @@ function log {
 }
 
 function altecho {
-  echo $1 && log $1
+  echo $1 && log "$1"
 }
 
 function get_pid {
