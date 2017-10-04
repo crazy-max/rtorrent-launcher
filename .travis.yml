@@ -17,7 +17,6 @@ install:
   - sudo update-rc.d rtorrent enable
   - sudo cp rtorrent-launcher.conf /etc/
   - sudo cp .rtorrent.rc $HOME/
-  - sudo mkdir $HOME/deps
   - sudo chmod +x travis/*
   - sudo bash -e travis/install-xmlrpc.sh
   - sudo bash -e travis/install-libsigcpp.sh
