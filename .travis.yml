@@ -27,7 +27,7 @@ install:
 before_script:
   - sudo mkdir /home/$USER/.rtorrent.session /var/log/rtorrent
   - sudo chown -R $USER. /home/$USER/ /var/log/rtorrent/
-  - sudo sed "s/USER=\"rotrrent\"/USER=\"$USER\"/" -i /etc/rtorrent-launcher.conf
+  - sudo sed "s/USER=\"rtorrent\"/USER=\"$USER\"/" -i /etc/rtorrent-launcher.conf
   - sudo sed "s/RTORRENT_CONFIG=\"\/home\/rtorrent\/.rtorrent.rc\"/RTORRENT_CONFIG=\"\/home\/$USER\/.rtorrent.rc\"/" -i /etc/rtorrent-launcher.conf
   - sudo sed "s/session = ~\/.rtorrent.session/session = \/home\/$USER\/.rtorrent.session/" -i /home/$USER/.rtorrent.rc
   - sudo cat /etc/rtorrent-launcher.conf
