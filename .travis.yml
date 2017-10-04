@@ -28,7 +28,7 @@ before_script:
   - sudo mkdir $HOME/.rtorrent.session /var/log/rtorrent
   - sudo chown -R $USER. $HOME /var/log/rtorrent/
   - sudo sed "s/USER=\"rotrrent\"/USER=\"$USER\"/" -i /etc/rtorrent-launcher.conf
-  - sudo sed "s/RTORRENT_CONFIG=\"\/home\/rtorrent\/.rtorrent.rc\"/RTORRENT_CONFIG=\"$HOME\/.rtorrent.rc\"/" -i /etc/rtorrent-launcher.conf
+  - sudo sed "s/RTORRENT_CONFIG=\"\/home\/rtorrent\/.rtorrent.rc\"/RTORRENT_CONFIG=\"\/home\/$USER\/.rtorrent.rc\"/" -i /etc/rtorrent-launcher.conf
   - sudo cat /etc/rtorrent-launcher.conf
 
 script: bash -e travis/run.sh
