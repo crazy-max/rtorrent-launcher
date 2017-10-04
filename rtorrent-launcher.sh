@@ -42,7 +42,7 @@ CONFIG_FILE="/etc/rtorrent-launcher.conf"
 
 #### No edits necessary beyond this line
 
-log() {
+function log {
   if [ $(whoami) = root ]; then
     su - ${USER} -c "echo [$(date +'%Y-%m-%d %H:%M:%S')] $1 >> $LOGFILE 2>&1"
   else
@@ -50,15 +50,15 @@ log() {
   fi
 }
 
-altecho() {
+function altecho {
   echo $1 && log $1
 }
 
-get_pid() {
+function get_pid {
   PID=$(cat ${RTORRENT_SESSION_DIR}/rtorrent.lock | awk -F: '{print($2)}' | sed "s/[^0-9]//g")
 }
 
-do_start() {
+function do_start {
   if do_status; then
     altecho "$SCREEN_NAME is already running"
     RES=1
@@ -89,7 +89,7 @@ do_start() {
   RES=1
 }
 
-do_stop() {
+function do_stop {
   if ! do_status; then
     altecho "$SCREEN_NAME could not be found. Probably not running."
     RES=1
@@ -129,7 +129,7 @@ do_stop() {
   RES=1
 }
 
-do_status() {
+function do_status {
   res=""
   if [ $(whoami) = root ]; then
     res=$(su - ${USER} -c "screen -ls" | grep [.]${SCREEN_NAME}[[:space:]])
@@ -142,7 +142,7 @@ do_status() {
   return 0
 }
 
-do_info() {
+function do_info {
   PID="N/A"
   RSS_STR="N/A"
 
