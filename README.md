@@ -62,6 +62,22 @@ Example: `RTORRENT_CONFIG="/home/rtorrent/.rtorrent.rc"`
 
 Example : `/etc/init.d/rtorrent start`
 
+## How can i help ?
+
+**Rtorrent Launcher** is free and open source and always will be.<br />
+We welcome all kinds of contributions :raised_hands:!<br />
+The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:<br />
+Any funds donated will be used to help further development on this project! :gift_heart:
+
+<p>
+  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=P7PRCWM6MRXD8">
+    <img src="https://github.com/crazy-max/rtorrent-launcher/blob/master/res/paypal.png" alt="Donate Paypal">
+  </a>
+  <a href="https://flattr.com/submit/auto?user_id=crazymax&url=https://github.com/crazy-max/rtorrent-launcher">
+    <img src="https://github.com/crazy-max/rtorrent-launcher/blob/master/res/flattr.png" alt="Flattr this!">
+  </a>
+</p>
+
 ## License
 
 LGPL. See `LICENSE` for more details.
