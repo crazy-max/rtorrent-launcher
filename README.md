@@ -49,7 +49,7 @@ Example: `LOG_DIR="/var/log/rtorrent"`
 
 #### RTORRENT_CONFIG
 
-Path the `.rtorrent.rc` config file.<br />
+Path to `.rtorrent.rc` config file.<br />
 Example: `RTORRENT_CONFIG="/home/rtorrent/.rtorrent.rc"`
 
 ## Usage
