@@ -16,7 +16,7 @@ install:
   - sudo update-rc.d rtorrent defaults
   - sudo cp rtorrent-launcher.conf /etc/
   - sudo cp travis/.rtorrent.rc /home/$USER/
-  - sudo chmod +x travis/*
+  - sudo chmod +x travis/*.sh
   - sudo bash -e travis/install-xmlrpc.sh
   - sudo bash -e travis/install-libsigcpp.sh
   - sudo bash -e travis/install-cares.sh
@@ -37,6 +37,7 @@ script: bash -e travis/run.sh
 after_script:
   - ls -al /home/$USER/.rtorrent.session/
   - cat /var/log/rtorrent/rtorrent-launcher.log
+  - cat /var/log/rtorrent/rtorrent.log
 
 notifications:
   slack:

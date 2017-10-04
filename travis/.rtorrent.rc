@@ -1,1 +1,4 @@
 session = ~/.rtorrent.session
+
+log.open_file = "log", (cat,/var/log/rtorrent/rtorrent,.log)
+log.add_output = "debug", "log"
