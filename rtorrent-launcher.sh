@@ -145,13 +145,13 @@ do_status() {
 do_info() {
   PID="N/A"
   RSS_STR="N/A"
-  
+
   if do_status; then
     get_pid
     RSS=$(ps -p ${PID} --format rss | tail -n 1 | awk '{print $1}')
     RSS_STR="$(expr ${RSS} / 1024) Mb (${RSS} kb)"
   fi
-  
+
   echo "- Rtorrent config       : ${RTORRENT_CONFIG}"
   echo "- Rtorrent session dir  : ${RTORRENT_SESSION_DIR}"
   echo "- Screen name           : ${SCREEN_NAME}"
@@ -247,7 +247,7 @@ case "$1" in
       exit 1
     fi
   ;;
-  
+
   info)
     altecho "$SCREEN_NAME infos :"
     do_info
