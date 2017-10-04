@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~
+cd ~/libs
 wget https://curl.haxx.se/download/curl-7.55.1.tar.gz
 tar zxf curl-7.55.1.tar.gz
 cd curl-7.55.1

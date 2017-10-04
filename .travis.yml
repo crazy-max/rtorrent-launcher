@@ -2,6 +2,10 @@ language: bash
 sudo: required
 dist: trusty
 
+cache:
+  directories:
+    - $HOME/libs
+
 before_install:
   - sudo apt-get update
   - sudo apt-get install -y -q git automake libcppunit-dev libtool build-essential pkg-config libssl-dev libncurses5-dev
@@ -13,7 +17,8 @@ install:
   - sudo update-rc.d rtorrent enable
   - sudo cp rtorrent-launcher.conf /etc/
   - sudo cp .rtorrent.rc $HOME/
-  - sudo chmod +x travis/install-*
+  - sudo mkdir $HOME/libs
+  - sudo chmod +x travis/*
   - sudo bash -e travis/install-xmlrpc.sh
   - sudo bash -e travis/install-libsigcpp.sh
   - sudo bash -e travis/install-cares.sh
@@ -26,7 +31,6 @@ before_script:
   - sudo chown -R $USER. $HOME /var/log/rtorrent/
   - sudo sed "s/USER=\"rotrrent\"/USER=\"$USER\"/" -i /etc/rtorrent-launcher.conf
   - sudo cat /etc/rtorrent-launcher.conf
-  - chmod +x travis/run.sh
 
 script: bash -e travis/run.sh
 
