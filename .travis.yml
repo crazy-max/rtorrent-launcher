@@ -14,7 +14,6 @@ install:
   - sudo cp rtorrent-launcher.sh /etc/init.d/rtorrent
   - sudo chmod +x /etc/init.d/rtorrent
   - sudo update-rc.d rtorrent defaults
-  - sudo update-rc.d rtorrent enable
   - sudo cp rtorrent-launcher.conf /etc/
   - sudo cp .rtorrent.rc $HOME/
   - sudo chmod +x travis/*

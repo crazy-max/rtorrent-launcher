@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/usr/bin/env bash
 ### BEGIN INIT INFO
 # Provides:          rtorrent
 # Required-Start:    $local_fs $remote_fs $network $syslog
