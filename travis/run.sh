@@ -1,5 +1,5 @@
 #!/bin/bash
 
-service rtorrent start
+/etc/init.d/rtorrent start
 timeout 180 grep -q 'rtorrent started successfully' <(tail -f /var/log/rtorrent/rtorrent-launcher.log)
-service rtorrent stop
+/etc/init.d/rtorrent stop
