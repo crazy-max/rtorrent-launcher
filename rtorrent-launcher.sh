@@ -43,10 +43,10 @@ CONFIG_FILE="/etc/rtorrent-launcher.conf"
 #### No edits necessary beyond this line
 
 log() {
-  if [ `whoami` = "root" ]; then
-    su - ${USER} -c "echo [`date +"%Y-%m-%d %H:%M:%S"`] $1 >> $LOGFILE 2>&1"
+  if [ $(whoami) = root ]; then
+    su - ${USER} -c "echo [$(date +"%Y-%m-%d %H:%M:%S")] $1 >> $LOGFILE 2>&1"
   else
-    echo "[`date +"%Y-%m-%d %H:%M:%S"`] $1" >> ${LOGFILE} 2>&1
+    echo "[$(date +"%Y-%m-%d %H:%M:%S")] $1" >> ${LOGFILE} 2>&1
   fi
 }
 
@@ -55,7 +55,7 @@ altecho() {
 }
 
 get_pid() {
-  PID=`cat ${RTORRENT_SESSION_DIR}/rtorrent.lock | awk -F: '{print($2)}' | sed "s/[^0-9]//g"`
+  PID=$(cat ${RTORRENT_SESSION_DIR}/rtorrent.lock | awk -F: '{print($2)}' | sed "s/[^0-9]//g")
 }
 
 do_start() {
@@ -66,7 +66,7 @@ do_start() {
   fi
 
   altecho "Starting $SCREEN_NAME..."
-  if [ `whoami` = "root" ]; then
+  if [ $(whoami) = root ]; then
     su - ${USER} -c "screen -AmdS $SCREEN_NAME $DAEMON -i $WAN_IP"
   else
     screen -AmdS ${SCREEN_NAME} ${DAEMON} -i ${WAN_IP}
@@ -76,7 +76,7 @@ do_start() {
   if do_status; then
     altecho "$SCREEN_NAME started successfully"
     get_pid;
-    if [ `whoami` = "root" ]; then
+    if [ $(whoami) = root ]; then
       su - ${USER} -c "echo $PID > ${RTORRENT_SESSION_DIR}/rtorrent.pid"
     else
       echo ${PID} > ${RTORRENT_SESSION_DIR}/rtorrent.pid
@@ -104,7 +104,7 @@ do_stop() {
   fi
 
   get_pid;
-  if [ `whoami` = "root" ]; then
+  if [ $(whoami) = root ]; then
     if ps -A | grep -sq ${PID}.*rtorrent; then
       su - ${USER} -c "kill -s INT ${PID}"
     fi
@@ -131,7 +131,7 @@ do_stop() {
 
 do_status() {
   res=""
-  if [ `whoami` = "root" ]; then
+  if [ $(whoami) = root ]; then
     res=$(su - ${USER} -c "screen -ls" | grep [.]${SCREEN_NAME}[[:space:]])
   else
     res=$(screen -ls | grep [.]${SCREEN_NAME}[[:space:]])
@@ -148,8 +148,8 @@ do_info() {
   
   if do_status; then
     get_pid
-    RSS="`ps -p ${PID} --format rss | tail -n 1 | awk '{print $1}'`"
-    RSS_STR="`expr ${RSS} / 1024` Mb (${RSS} kb)"
+    RSS=$(ps -p ${PID} --format rss | tail -n 1 | awk '{print $1}')
+    RSS_STR="$(expr ${RSS} / 1024) Mb (${RSS} kb)"
   fi
   
   echo "- Rtorrent config       : ${RTORRENT_CONFIG}"
@@ -177,7 +177,6 @@ fi
 
 # Load config
 source "$CONFIG_FILE"
-USER_HOME=$(eval echo ~${USER})
 
 # Check required packages
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -187,12 +186,12 @@ if ! type screen > /dev/null 2>&1; then altecho "ERROR: You need screen for this
 # Init vars
 LOGFILE="$LOG_DIR/rtorrent-launcher.log"
 DAEMON_NAME="rtorrent"
-DAEMON_PATH=""
+DAEMON=""
 RTORRENT_SESSION_DIR=""
 WAN_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
 # Check current user
-if [ `whoami` != "root" -a `whoami` != "$USER" ]; then
+if [ $(whoami) = root -a $(whoami) != "$USER" ]; then
   altecho "ERROR: You need to be logged as root or $USER"
   exit 1
 else
@@ -205,7 +204,7 @@ if [ ! -d "$LOG_DIR" ]; then
 fi
 
 # Seek rtorrent daemon
-for i in `echo "$PATH" | tr ':' '\n'`
+for i in $(echo "$PATH" | tr ':' '\n')
 do
   if [ -x "$i/$DAEMON_NAME" ]; then
     DAEMON="$i/$DAEMON_NAME"
@@ -224,7 +223,7 @@ if [ ! -r "$RTORRENT_CONFIG" ]; then
 fi
 
 # Seek rtorrent session dir
-RTORRENT_SESSION_DIR=`cat "$RTORRENT_CONFIG" | grep "^[[:space:]]*session[[:space:]]*=" | sed "s/^[[:space:]]*session[[:space:]]*=[[:space:]]*//"`
+RTORRENT_SESSION_DIR=$(cat "$RTORRENT_CONFIG" | grep "^[[:space:]]*session[[:space:]]*=" | sed "s/^[[:space:]]*session[[:space:]]*=[[:space:]]*//")
 if [ ! -d "$RTORRENT_SESSION_DIR" ]; then
   altecho "ERROR: Session directory $RTORRENT_SESSION_DIR does not exist or is not readable from $RTORRENT_CONFIG."
   exit 1
