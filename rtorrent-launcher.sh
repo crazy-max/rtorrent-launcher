@@ -44,9 +44,9 @@ CONFIG_FILE="/etc/rtorrent-launcher.conf"
 
 log() {
   if [ $(whoami) = root ]; then
-    su - ${USER} -c "echo [$(date +"%Y-%m-%d %H:%M:%S")] $1 >> $LOGFILE 2>&1"
+    su - ${USER} -c "echo [$(date +'%Y-%m-%d %H:%M:%S')] $1 >> $LOGFILE 2>&1"
   else
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")] $1" >> ${LOGFILE} 2>&1
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" >> ${LOGFILE} 2>&1
   fi
 }
 
@@ -190,18 +190,11 @@ DAEMON=""
 RTORRENT_SESSION_DIR=""
 WAN_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
-# Check current user
-if [ $(whoami) = root -a $(whoami) != "$USER" ]; then
-  altecho "ERROR: You need to be logged as root or $USER"
-  exit 1
-else
-  chown -R ${USER}. "$LOG_DIR"
-fi
-
 # Create log folder
 if [ ! -d "$LOG_DIR" ]; then
   mkdir -p "$LOG_DIR"
 fi
+chown -R ${USER}. "$LOG_DIR"
 
 # Seek rtorrent daemon
 for i in $(echo "$PATH" | tr ':' '\n')
