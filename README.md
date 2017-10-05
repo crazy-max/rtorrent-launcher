@@ -6,7 +6,8 @@
 
 ## About
 
-A simple bash script to launch the [rtorrent](https://github.com/rakshasa/rtorrent) daemon.<br />
+Today rtorrent does not have a built-in daemon but it's [in development](https://github.com/rakshasa/rtorrent/pull/446) 👷<br />
+That's why i have created this simple bash script to launch 🚀 [rtorrent](https://github.com/rakshasa/rtorrent) as a daemon 😈<br />
 Tested on Debian and Ubuntu.
 
 ## Requirements
