@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.1 (2017/10/04)
+## 2.1.1 (2017/10/05)
 
 * Error checking current user
 * Change script source to bash
