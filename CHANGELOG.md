@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.1.1 (2017/10/04)
+
+* Error checking current user
+* Change script source to bash
+* Bad log format
+* Unix line endings
+* Missing quotes to log to file properly
+* Create log directory if not exist
+* Add .editorconfig
+* Add Travis CI
+
 ## 2.1.0 (2017/10/04)
 
 * Fix error prone
