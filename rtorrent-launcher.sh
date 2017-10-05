@@ -12,7 +12,7 @@
 #                                                                                #
 #  Rtorrent Launcher 2.1.1                                                       #
 #                                                                                #
-#  A simple bash script to launch the rTorrent daemon                            #
+#  A simple bash script to launch rtorrent as a daemon                           #
 #                                                                                #
 #  Copyright (C) 2013-2017 Cr@zy <webmaster@crazyws.fr>                          #
 #                                                                                #
