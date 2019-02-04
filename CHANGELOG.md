@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.2 (2019/02/04)
+
+* Switch to TravisCI (com)
+
 ## 2.1.1 (2017/10/05)
 
 * Error checking current user

@@ -10,11 +10,11 @@
 
 ##################################################################################
 #                                                                                #
-#  Rtorrent Launcher 2.1.1                                                       #
+#  Rtorrent Launcher 2.1.2                                                       #
 #                                                                                #
 #  A simple bash script to launch rtorrent as a daemon                           #
 #                                                                                #
-#  Copyright (C) 2013-2018 CrazyMax                                              #
+#  Copyright (C) 2013-2019 CrazyMax                                              #
 #                                                                                #
 #  Rtorrent Launcher is free software; you can redistribute it and/or modify     #
 #  it under the terms of the GNU Lesser General Public License as published by   #
