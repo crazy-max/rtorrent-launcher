@@ -1,7 +1,8 @@
 [![GitHub release](https://img.shields.io/github/release/crazy-max/rtorrent-launcher.svg?style=flat-square)](https://github.com/crazy-max/rtorrent-launcher/releases/latest)
 [![Build Status](https://img.shields.io/travis/com/crazy-max/rtorrent-launcher/master.svg?style=flat-square)](https://travis-ci.com/crazy-max/rtorrent-launcher)
 [![Code Quality](https://img.shields.io/codacy/grade/3bf2380df5a447da9a2c50b1008ffcfe.svg?style=flat-square)](https://www.codacy.com/app/crazy-max/rtorrent-launcher)
-[![Donate Paypal](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=P7PRCWM6MRXD8)
+[![Support me on Patreon](https://img.shields.io/badge/donate-patreon-fb664e.svg?style=flat-square)](https://www.patreon.com/crazymax)
+[![Donate Paypal](https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square)](https://www.paypal.me/crazyws)
 
 ## About
 
@@ -69,7 +70,8 @@ All kinds of contributions are welcome :raised_hands:!<br />
 The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:<br />
 But we're not gonna lie to each other, I'd rather you buy me a beer or two :beers:!
 
-[![Paypal](.res/paypal-donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=P7PRCWM6MRXD8)
+[![Support me on Patreon](.res/patreon.png)](https://www.patreon.com/crazymax) 
+[![Paypal Donate](.res/paypal-donate.png)](https://www.paypal.me/crazyws)
 
 ## License
 
